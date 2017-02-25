@@ -1,43 +1,46 @@
-set nocompatible              " be iMproved, required
-filetype off                  " required
-set nu                        " turn on line numbering
-"syntax on                     " turn on syntax highlighting
+call plug#begin()
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-" let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
+Plug 'fatih/vim-go'
 
-Plugin 'tpope/vim-fugitive'
-Plugin 'derekwyatt/vim-scala'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'fatih/vim-go'
-Plugin 'Shougo/neocomplete'
-Plugin 'nsf/gocode', {'rtp': 'vim/'}
-Plugin 'tpope/vim-commentary'
+call plug#end()
 
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
+" ==================================================
+" ==================== Settings ====================
 syntax on
-set ignorecase
-set smartcase
+set number		" Show line numbers
+set ignorecase		" Search case insensitive...
+set smartcase		" ... but not if it begins with upper case
+set splitright		" Split vertical windows right of the current window
+set splitbelow		" Split horizontal windows below the current window
+set hlsearch		" Highlight found search
+
 colorscheme koehler
-let g:go_fmt_command = "goimports"
-let g:ycm_autoclose_preview_window_after_insertion = 1
-let g:go_metalinter_deadline='20s'
-let g:go_list_type = "quickfix"
 
-" YCM Logging
-" let g:ycm_keep_logfiles = 1
-" let g:ycm_log_level = 'debug'
-
-set splitright
+" ==================================================
+" ==================== Mappings ====================
+let mapleader = ","
 " auto close braces
 inoremap {<CR> {<CR>}<C-o>O
-call neocomplete#custom#source('_', 'sorters', [])
-"let g:neocomplete#enable_at_startup = 1
+" Remove search highlight
+nnoremap <leader><space> :nohlsearch<CR>
+" Some useful quickfix shortcuts for quickfix
+map <C-n> :cn<CR>
+map <C-m> :cp<CR>
+nnoremap <leader>a :cclose<CR>
+
+" =================================================
+" ==================== Plugins ====================
+
+
+" let g:ycm_autoclose_preview_window_after_insertion=1
+" ==================== vim-go ====================
+let g:go_fmt_command = "goimports"
+let g:go_list_type = "quickfix"
+
+" go command status (requires vim-go)
+" set statusline+=%#goStatuslineColor#
+" set statusline+=%{go#statusline#Show()}
+" set statusline+=%*
 
 " run :GoBuild or :GoTestCompile based on the go file
 function! s:build_go_files()
@@ -49,21 +52,14 @@ function! s:build_go_files()
 	endif
 endfunction
 
-let mapleader = ","
+augroup go
+	autocmd!
+	autocmd FileType go nmap <Leader>v <Plug>(go-def-vertical)
 
-" Some useful quickfix shortcuts for quickfix
-map <C-n> :cn<CR>
-map <C-m> :cp<CR>
-nnoremap <leader>a :cclose<CR>
+	autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
+	autocmd FileType go nmap <leader>t  <Plug>(go-test)
+	autocmd FileType go nmap <leader>r  <Plug>(go-run)
 
-autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
-autocmd FileType go nmap <leader>t  <Plug>(go-test)
-autocmd FileType go nmap <leader>r  <Plug>(go-run)
-autocmd FileType go nmap <Leader>d <Plug>(go-doc)
-autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
-autocmd FileType go nmap <Leader>v <Plug>(go-def-vertical)
-
-" go command status (requires vim-go)
-set statusline+=%#goStatuslineColor#
-set statusline+=%{go#statusline#Show()}
-set statusline+=%*
+	autocmd FileType go nmap <Leader>d <Plug>(go-doc)
+	autocmd FileType go nmap <Leader>c <Plug>(go-coverage-toggle)
+augroup END
