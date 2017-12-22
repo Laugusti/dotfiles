@@ -1,6 +1,8 @@
 call plug#begin()
 
 Plug 'fatih/vim-go'
+Plug 'nsf/gocode', { 'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh' }
+Plug 'Valloric/YouCompleteMe'
 
 call plug#end()
 
@@ -31,8 +33,9 @@ nnoremap <leader>a :cclose<CR>
 " =================================================
 " ==================== Plugins ====================
 
+" ==================== YouCompleteMe ====================
+let g:ycm_autoclose_preview_window_after_insertion=1
 
-" let g:ycm_autoclose_preview_window_after_insertion=1
 " ==================== vim-go ====================
 let g:go_fmt_command = "goimports"
 let g:go_list_type = "quickfix"
@@ -46,7 +49,7 @@ let g:go_list_type = "quickfix"
 function! s:build_go_files()
 	let l:file = expand('%')
 	if l:file =~# '^\f\+_test\.go$'
-		call go#cmd#Test(0, 1)
+		call go#test#Test(0, 1)
 	elseif l:file =~# '^\f\+\.go$'
 		call go#cmd#Build(0)
 	endif
