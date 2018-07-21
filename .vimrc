@@ -3,6 +3,8 @@ call plug#begin()
 Plug 'fatih/vim-go'
 Plug 'nsf/gocode', { 'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh' }
 Plug 'Valloric/YouCompleteMe'
+Plug 'rhysd/vim-crystal'
+Plug 'vim-airline/vim-airline'
 
 call plug#end()
 
@@ -17,6 +19,8 @@ set splitbelow		" Split horizontal windows below the current window
 set hlsearch		" Highlight found search
 
 colorscheme koehler
+" sets parenthesis matching color
+hi MatchParen cterm=bold ctermbg=none ctermfg=blue
 
 " ==================================================
 " ==================== Mappings ====================
